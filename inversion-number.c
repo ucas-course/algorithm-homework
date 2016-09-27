@@ -5,7 +5,13 @@
 #include <stdlib.h>
 #include "inversion-number.h"
 
-
+/**
+ * Number of inversions merge-sort idea implementation
+ * @param arr
+ * @param begin
+ * @param end
+ * @return
+ */
 long mergeSort(int *arr, int begin, int end) {
     if (begin == end) {
         return 0;
@@ -27,6 +33,7 @@ long mergeSort(int *arr, int begin, int end) {
         if (arr[i + begin] > arr[j + p + 1]) {
             tmp[k++] = arr[j + p + 1];
             j++;
+            // important! count the number of inversion
             inv += ls - i;
         } else {
             tmp[k++] = arr[i + begin];
@@ -42,11 +49,22 @@ long mergeSort(int *arr, int begin, int end) {
     return il + ir + inv;
 }
 
+/**
+ * entry of count the number of inversions, using merge-sort idea
+ * @param arr input, array of unsort number
+ * @param size size of input array
+ * @return inversion number
+ */
 long mergeSortInversion(int *arr, int size) {
     return mergeSort(arr, 0, size - 1);
-
 }
 
+/**
+ * base algorithm count the number of inversions, validate result only
+ * @param arr input, array of unsort number
+ * @param size size of input array
+ * @return inversion number
+ */
 long baseInversion(int *arr, int size) {
     long re = 0;
     for (int i = 1; i < size; i++) {

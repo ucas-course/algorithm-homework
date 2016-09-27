@@ -8,7 +8,7 @@
 
 
 /**
- * calculate multiplication of a and b,which think in binary.
+ * calculate multiplication of a and b, thinking in binary.
  * use karatsuba algorithm
  * NOTE: think in binary
  * @param a A matrix
@@ -55,7 +55,7 @@ int getBit(int x) {
 }
 
 /**
- * calculate multiplication of a and b,which think in binary.
+ * calculate multiplication of a and b, thinking in binary.
  * use base method
  * NOTE: think in binary
  * @param a

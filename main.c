@@ -15,9 +15,11 @@ int arr[BUFFER_SIZE];
 
 int main() {
 
-    //int k;
-    //k = baseMulti(13,4);
-    //k = karatsubaMulti(5e5, 5e5, 10);
+//    int k;
+//    k = baseMulti(5e5,5e5);
+//    printf("%d\n",k);
+//    k = karatsubaMulti(5e5, 5e5);
+//    printf("%d\n",k);
 
 //    int a[4] = {1, 2, 3, 4};
 //    int *b = baseMatrixMulti(a, 2, 2, a, 2, 2);
