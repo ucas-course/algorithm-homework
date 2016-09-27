@@ -1,13 +1,18 @@
+
 # Homework 1
 
-> I choose question 1,2,3 and 8,10.
-In addition, I complete question 11.
+> I choose question 1,2,3 and question 8,10.
+> 
+> In addition, I complete question 11.
+> 
 > I implement all solution of homework in `C`
 
 ## Question 1
 
 > You are interested in analyzing some hard-to-obtain data from two separate databases. Each database contains $n$ numerical values, so there are $2n$ values total and you may assume that no two values are the same. You'd like to determine the median of this set of $2n$ values, which we will define here to be the $n^{th}$ smallest value.
+> 
 > However, the only way you can access these values is through $queries$ to the databases. In a single query, you can specify a value $k$ to one of the two databases, and the chosen database will return the $k^{th}$ smallest value that it contains. Since queries are expensive, you would like to compute the median using as few queries as possible.
+> 
 > Give an algorithm that finds the median value using at most $O(\log n)$ queries.
 
 ### Idea
@@ -23,7 +28,9 @@ In addition, I complete question 11.
 ## Question 2
 
 > Find the $k^{th}$ largest element in an unsorted array. Note that it is the $k$th largest element in the sorted order, not the $k^{th}$ distinct element.
+> 
 > INPUT: An unsorted array $A$ and $k$.
+> 
 > OUTPUT: The $k^{th}$ largest element in the unsorted array $A$.
 
 ### Idea
@@ -32,8 +39,8 @@ Use quick-sort idea, find a pivot then make left side smaller than pivot and rig
 
 In this question we can transform it to a equivalent question: find $s$th smallest element ($s=size-k$) (index begin from 0)
 
-We can get pivot's position(index) easily. if position(index) smaller then $s$, we can find $s-index-1$th in left part.
-if position(index) smaller then $s$, find $s$th in right part.
+We can get pivot's position(index) easily. if position(index) smaller then $s$, we can find $(s-index-1)^{th}$ smallest in left part.
+if position(index) smaller then $s$, find $s^{th}$ smallest in right part.
 if position(index) equal $s$, return current element.
 
 ### Subproblem reduction graph
@@ -49,14 +56,15 @@ So, this idea is correct.
 ### Complexity
 
 - **Worst-case:** pivot is the largest or smallest element.$T(n) \le T(n-1)+cn \Rightarrow T(n)=O(n^2)$
-- **Best-case:** pivot divide array to two part which is same size $T(n) \le T(\frac{n}{2})+cn \Rightarrow T(n)=O(n^2)$
-- **Most cases:**
+- **Best-case:** pivot divide array into two part which is same size $T(n) \le T(\lceil \frac{n}{2} \rceil )+cn \Rightarrow T(n)=O(n)$
+- **Most cases:** same to quick-sort, can prove $T(n)=O(n)$ easily.
 
 ### Implementation
 
 ## Question 3
 
 > Consider an $n$-node complete binary tree $T$, where $n=2^d-1$ for some $d$. Each node $v$ of $T$ is labeled with a real number $x_v$. You may assume that the real numbers labeling the nodes are all distinct. A node $v$ of $T$ is a $local\ minimum$ if the label $x_v$ is less than the label $x_w$ for all nodes $w$ that are joined to $v$ by an edge.
+> 
 > You are given such a complete binary tree $T$, but the labeling is only specified in the following $implicit$ way: for each node $v$, you can determine the value $x_v$ by $probing$ the node $v$. Show how to find a local minimum of $T$ using only $O(\log n)\ probes$ to the nodes of $T$.
 
 ### Idea
@@ -73,9 +81,11 @@ So, this idea is correct.
 
 ## Question 8
 
->The attached file Q8.txt contains 100,000 integers between 1 and 100,000 (each row has a single integer), the order of these integers is random and no integer is repeated.
->1. Write a program to implement the Sort-and-Count algorithms in your favorite language, find the number of inversions in the given file.
->2. In the lecture, we count the number of inversions in $O(n log n)$ time, using the Merge-Sort idea. Is it possible to use the Quick-Sort idea instead? If possible, implement the algorithm in your favourite language, run it over the given file, and compare its running time with the one above. If not, give a explanation.
+> The attached file Q8.txt contains 100,000 integers between 1 and 100,000 (each row has a single integer), the order of these integers is random and no integer is repeated.
+>
+> 1. Write a program to implement the Sort-and-Count algorithms in your favorite language, find the number of inversions in the given file.
+> 
+> 2. In the lecture, we count the number of inversions in $O(n log n)$ time, using the Merge-Sort idea. Is it possible to use the Quick-Sort idea instead? If possible, implement the algorithm in your favourite language, run it over the given file, and compare its running time with the one above. If not, give a explanation.
 
 ### Merge-sort idea implementation
 
