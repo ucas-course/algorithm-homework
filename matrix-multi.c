@@ -74,7 +74,7 @@ int *combineMatrix(int *a, int *b, int *c, int *d, int size) {
 
     int h = size;
     size *= 2;
-    int *res = malloc(sizeof(int) * size);
+    int *res = malloc(sizeof(int) * size * size);
 
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
@@ -116,7 +116,7 @@ int **partitionMatrix(int *m, int size) {
     int **res = malloc(sizeof(int *) * 4);
 
     for (int i = 0; i < 4; i++) {
-        res[i] = malloc(h * h);
+        res[i] = malloc(sizeof(int) * h * h);
     }
 
     for (int i = 0; i < size; i++) {

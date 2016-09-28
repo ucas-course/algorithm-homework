@@ -56,11 +56,116 @@ So, this idea is correct.
 ### Complexity
 
 - **Worst-case:** pivot is the largest or smallest element.$T(n) \le T(n-1)+cn \Rightarrow T(n)=O(n^2)$
-- **Best-case:** pivot divide array into two part which is same size $T(n) \le T(\lceil \frac{n}{2} \rceil )+cn \Rightarrow T(n)=O(n)$
-- **Most cases:** same to quick-sort, can prove $T(n)=O(n)$ easily.
+- **Best-case:** pivot divide array into two part which is same size $T(n) \le T(\frac{n}{2})+cn \Rightarrow T(n)=O(n)$
+- **Most cases:** same to quick-sort, wo can prove $T(n)=O(n)$ easily.
 
 ### Implementation
 
+kthLargest.h
+
+```c
+//
+// Created by zl on 2016/9/26.
+//
+
+#ifndef WORKSPACE_KTHLARGEST_H
+#define WORKSPACE_KTHLARGEST_H
+
+int kthLargest(int *arr, int size,int kth);
+
+#endif //WORKSPACE_KTHLARGEST_H
+
+```
+
+kthLargest.c
+
+```c
+//
+// Created by zl on 2016/9/26.
+//
+
+#include "kthLargest.h"
+
+/**
+ * Implementation of finding kth min in unsort array, using quick-sort idea
+ * @param arr array of number
+ * @param begin begin index of array
+ * @param end end index of array
+ * @param kth kth min
+ * @return kth min element value in arr
+ */
+int kthMinHelper(int *arr, int begin, int end, int kth) {
+
+    if (begin == end) {
+        return arr[begin];
+    }
+    int p = arr[begin];
+    int i = begin;
+    int j = end;
+
+    while (i != j) {
+        while (i != j && arr[j] >= p) j--;
+        arr[i] = arr[j];
+        while (i != j && arr[i] < p) i++;
+        arr[j] = arr[i];
+
+    }
+    arr[i] = p;
+
+    if (i - begin < kth) {
+        return kthMinHelper(arr, i + 1, end, kth - (i - begin + 1));
+    }
+    if (i - begin > kth) {
+        return kthMinHelper(arr, begin, i - 1, kth);
+    }
+    return p;
+
+}
+
+/**
+ * entry of find kth largest
+ * @param arr array of number
+ * @param size size of array
+ * @param kth kth large element value in array
+ * @return
+ */
+int kthLargest(int *arr, int size, int kth) {
+    // kth largest eq to size-kth min (begin from 0)
+    return kthMinHelper(arr, 0, size - 1, size - kth);
+
+}
+
+
+```
+
+main.c
+
+```c
+//
+// Created by zl on 2016/9/24.
+//
+
+#include "stdio.h"
+#include "stdlib.h"
+#include "multiplication.h"
+#include "matrix-multi.h"
+#include "inversion-number.h"
+#include "kthLargest.h"
+#include "tree-local-min.h"
+
+#define BUFFER_SIZE (1000*1000)
+int arr[BUFFER_SIZE];
+
+int main() {
+
+    int arr[] = {3, 2, 5, 8, 6, 1};
+    //sorted   : 1, 2, 3, 5 ,6, 8
+    printf("%d", kthLargest(arr, 6, 6));
+    return 0;
+    
+}
+```
+    
 ## Question 3
 
 > Consider an $n$-node complete binary tree $T$, where $n=2^d-1$ for some $d$. Each node $v$ of $T$ is labeled with a real number $x_v$. You may assume that the real numbers labeling the nodes are all distinct. A node $v$ of $T$ is a $local\ minimum$ if the label $x_v$ is less than the label $x_w$ for all nodes $w$ that are joined to $v$ by an edge.
@@ -69,15 +174,141 @@ So, this idea is correct.
 
 ### Idea
 
-
+Think about a tree, if its root smaller than tow children, itself is local minimum.
+  
+If root has one or more children smaller then it, we can think the child and its children to a tree, in which it must have local minimum.
+  
 
 ### Subproblem reduction graph
 
 ### Provement
 
+Firstly, we always make tree smaller than before(half), so after finite step we can finish.
+
+Secondly,If root has one or more children smaller then it, its subtree must have local minimum node. 
+So, we can find in its subtree.
+
 ### Complexity
 
+Each level in tree, we only visit one time, so $T(n)=T(\frac{n}{2})+c \Rightarrow T(n)=O(log(n))$
+
 ### Implementation
+
+tree-local-min.h
+
+```c
+//
+// Created by zl on 2016/9/26.
+//
+
+#ifndef WORKSPACE_TREE_LOCAL_MIN_H
+#define WORKSPACE_TREE_LOCAL_MIN_H
+
+typedef struct tagNode {
+    int val;
+    struct tagNode *left;
+    struct tagNode *right;
+} Node;
+typedef Node Tree;
+
+int findTreeLocalMin(Tree *tree);
+
+#endif //WORKSPACE_TREE_LOCAL_MIN_H
+
+```
+
+tree-local-min.c
+
+```c
+//
+// Created by zl on 2016/9/26.
+//
+
+#include "tree-local-min.h"
+
+#include "stdlib.h"
+
+int findTreeLocalMin(Tree *tree) {
+    if (tree->left == NULL && tree->right == NULL) {
+        return tree->val;
+    }
+    if (tree->left->val > tree->val && tree->right->val > tree->val) {
+        return tree->val;
+    }
+    if (tree->left->val < tree->val) {
+        return findTreeLocalMin(tree->left);
+    }
+    return findTreeLocalMin(tree->right);
+}
+
+```
+
+```c
+//
+// Created by zl on 2016/9/24.
+//
+
+#include "stdio.h"
+#include "stdlib.h"
+#include "multiplication.h"
+#include "matrix-multi.h"
+#include "inversion-number.h"
+#include "kthLargest.h"
+#include "tree-local-min.h"
+
+#define BUFFER_SIZE (1000*1000)
+int arr[BUFFER_SIZE];
+
+int main() {
+
+    // Tree =
+    //             5
+    //           /   \
+    //          2     7
+    //         / \   / \
+    //        3   4 6   1
+    //
+    Node n1 = {
+            .left=NULL,
+            .right=NULL,
+            .val=1
+    }, n6 = {
+            .left=NULL,
+            .right=NULL,
+            .val=6
+    }, n4 = {
+            .left=NULL,
+            .right=NULL,
+            .val=4
+    }, n3 = {
+            .left=NULL,
+            .right=NULL,
+            .val=3
+    };
+
+    Node n2 = {
+            .left=&n3,
+            .right=&n4,
+            .val=2
+    }, n7 = {
+            .left=&n6,
+            .right=&n1,
+            .val=7
+    };
+
+    Node n5 = {
+            .left=&n2,
+            .right=&n7,
+            .val=5
+    };
+
+    Tree *tree = &n5;
+
+    printf("%d", findTreeLocalMin(tree));
+
+    return 0;
+}
+```
 
 ## Question 8
 
@@ -223,6 +454,7 @@ int main() {
 
     long invNum = mergeSortInversion(arr, size);
 
+    //reuslt is 2500572073
     printf("%ld", invNum);
 
     return 0;
@@ -231,7 +463,10 @@ int main() {
 
 ### Is it possible to use the Quick-Sort idea instead?
 
-The question is **No**,
+The question is **No**, merge-sort use bottom-up idea divide array, but quick use top-down idea.
+
+For merge-sort idea, both its left and right side is sorted anytime, each element can't jump to unsort part, so we can count the number of inversions.
+But in quick-sort idea, element can jump to unsort part,maybe jump over larger element. 
 
 ## Question 10
 
@@ -524,6 +759,51 @@ int main() {
 
 ### Performance
 
+main.c
+
+```c
+//
+// Created by zl on 2016/9/24.
+//
+
+#include "stdio.h"
+#include "stdlib.h"
+#include "time.h"
+#include "multiplication.h"
+#include "matrix-multi.h"
+#include "inversion-number.h"
+#include "kthLargest.h"
+#include "tree-local-min.h"
+
+#define DIM         512
+#define BUFFER_SIZE ((DIM)*(DIM))
+int arr[BUFFER_SIZE];
+
+int main() {
+    for (int i = 0; i < BUFFER_SIZE; i++) {
+        arr[i] = rand();
+    }
+    int time = clock();
+    int *b = baseMatrixMulti(arr, DIM, DIM, arr, DIM, DIM);
+    time = clock() - time;
+    printf("%d\n", time);
+
+    time = clock();
+    b = strassenMatrixMulti(arr, arr, DIM);
+    time = clock() - time;
+    printf("%d\n", time);
+    return 0;
+}
+```
+
+In this test, base method use
+
+|               | Base Multi    | Strassen Multi  |
+|:-------------:|:-------------:|:---------------:|
+| time(ms)      |      984      |      19718      |
+
+Strassen Multi use more time because malloc() allocate memory many times.
+In this test, we find memory use max 9G. there are some memory leak in code.
 
 ## Question 11
 
@@ -668,3 +948,50 @@ int main() {
 ```
 
 ### Performance
+
+main.c
+
+```c
+//
+// Created by zl on 2016/9/24.
+//
+
+#include "stdio.h"
+#include "stdlib.h"
+#include "time.h"
+#include "multiplication.h"
+#include "matrix-multi.h"
+#include "inversion-number.h"
+#include "kthLargest.h"
+#include "tree-local-min.h"
+
+#define BUFFER_SIZE (1000*1000)
+int arr[BUFFER_SIZE];
+
+int main() {
+    int k;
+    int time = clock();
+    for (int i = 0; i < 10000; i++) {
+        k = baseMulti(5e5, 5e5);
+    }
+    time = clock() - time;
+    printf("%d\n", time);
+
+    time = clock();
+    for (int i = 0; i < 10000; i++) {
+        k = karatsubaMulti(5e5, 5e5);
+    }
+    time = clock() - time;
+    printf("%d\n", time);
+    return 0;
+}
+```
+
+Running this program a lot of times, we get avg time
+
+|               | Base Multi    | Karatsuba Multi  |
+|:-------------:|:-------------:|:----------------:|
+| time(ms)      |       15      |        47        |
+
+We can find Karatsuba worth than base idea. The reason is that Karatsuba use recursion, and Base idea only use loop.
+In small(in this case, `int` was used, the largest number is 2147483647) size Multi, base idea is better  
