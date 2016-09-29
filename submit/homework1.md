@@ -1,11 +1,10 @@
-
 # Homework 1
 
-> I choose question 1,2,3 and question 8,10.
-> 
-> In addition, I complete question 11.
-> 
-> I implement all solution of homework in `C`
+> Student Name: ZhangLe(张乐)
+>
+> Student ID: 201628013229047
+
+I choose question 1,2,3 and question 8,10. In addition, I complete question 11. I implement all solution of homework in `C`
 
 ## Question 1
 
@@ -25,7 +24,6 @@ If $a>b$, find median in $A[1,\frac{n}{2}]$ and $B[\frac{n}{2}+1,n]$, otherwise,
 #### Pseudo Code
 
 ```pseudo
-
 findMedianHelper(A[0...n-1],B[0...n-1)
     if(A and B only have one element)
         return MIN(A,B)
@@ -36,10 +34,11 @@ findMedianHelper(A[0...n-1],B[0...n-1)
         return findMedianHelper(A[0...a],B[b+1...n-1])
     else
         return findMedianHelper(A[a+1...n-1],B[0...b])
-
 ```
 
 ### Subproblem reduction graph
+
+![](images/Q1.png)
 
 ### Provement
 
@@ -185,6 +184,8 @@ kthMin(A[b...e],kth)
 ```
 
 ### Subproblem reduction graph
+
+![](images/Q2.png)
 
 ### Provement
 
@@ -332,6 +333,8 @@ findTreeLocalMin(node)
 
 ### Subproblem reduction graph
 
+![](images/Q3.png)
+
 ### Provement
 
 Firstly, we always make tree smaller than before(half), so after finite step we can finish.
@@ -475,7 +478,6 @@ int main() {
 inversion-number.h
 
 ```c
-
 //
 // Created by zl on 2016/9/25.
 //
@@ -495,7 +497,6 @@ long baseInversion(int *arr, int size);
 inversion-number.c
 
 ```c
-
 //
 // Created by zl on 2016/9/25.
 //
