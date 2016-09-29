@@ -17,11 +17,22 @@
 
 ### Idea
 
+Assume $A$ and $B$ are two databases, elements in $A$ and $B$ are sorted.
+
+We can get median val from each database, assume $a$ and $b$. 
+if $a>b$, find median in $A[1,\frac{n}{2}-1]$ and $B[\frac{n}{2},n]$, otherwise, find median in $A[\frac{n}{2},n]$ and $B[1,\frac{n}{2}-1]$
+
 ### Subproblem reduction graph
 
 ### Provement
 
+Firstly, we always make each database smaller than before(half), so after finite step we can finish.
+
+Secondly, we can always find $k^{th}$ element in each partition. So when the partition size turn to one, the smaller element is the result.
+
 ### Complexity
+
+For function called each time, question reduce to half size, so $T(n)=T(\frac{n}{2})+c \Rightarrow T(n)=O(log(n))$
 
 ### Implementation
 
@@ -176,7 +187,7 @@ int main() {
 
 Think about a tree, if its root smaller than tow children, itself is local minimum.
   
-If root has one or more children smaller then it, we can think the child and its children to a tree, in which it must have local minimum.
+If root has one or more children smaller then it, we can think the child as a tree, which must have local minimum.
   
 
 ### Subproblem reduction graph
@@ -185,12 +196,11 @@ If root has one or more children smaller then it, we can think the child and its
 
 Firstly, we always make tree smaller than before(half), so after finite step we can finish.
 
-Secondly,If root has one or more children smaller then it, its subtree must have local minimum node. 
-So, we can find in its subtree.
+Secondly,If root has one or more children smaller then it, its subtree must have local minimum node. So, we can find it in its subtree.
 
 ### Complexity
 
-Each level in tree, we only visit one time, so $T(n)=T(\frac{n}{2})+c \Rightarrow T(n)=O(log(n))$
+For each level in tree, we only visit one time, so $T(n)=T(\frac{n}{2})+c \Rightarrow T(n)=O(log(n))$
 
 ### Implementation
 
@@ -581,7 +591,7 @@ int *combineMatrix(int *a, int *b, int *c, int *d, int size) {
 
     int h = size;
     size *= 2;
-    int *res = malloc(sizeof(int) * size);
+    int *res = malloc(sizeof(int) * size * size);
 
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
@@ -623,7 +633,7 @@ int **partitionMatrix(int *m, int size) {
     int **res = malloc(sizeof(int *) * 4);
 
     for (int i = 0; i < 4; i++) {
-        res[i] = malloc(h * h);
+        res[i] = malloc(sizeof(int) * h * h);
     }
 
     for (int i = 0; i < size; i++) {
