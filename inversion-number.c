@@ -59,6 +59,52 @@ long mergeSortInversion(int *arr, int size) {
     return mergeSort(arr, 0, size - 1);
 }
 
+int *tmp = NULL;
+
+long quickSort(int *arr, int begin, int end) {
+    if (begin >= end) {
+        return 0;
+    }
+    long v = 0, lv, rv, vi = 0;
+    int pi = begin;
+
+    int p = arr[begin];
+    for (int i = begin; i <= end; i++) {
+        if (arr[i] < p) pi++;
+    }
+
+    tmp[pi] = p;
+
+    int ir = pi + 1, il = begin;
+
+    for (int i = begin + 1; i <= end; i++) {
+        if (arr[i] > p) {
+            tmp[ir++] = arr[i];
+            vi++;
+            if (i < begin) v++;
+        } else if (arr[i] < p) {
+            tmp[il++] = arr[i];
+            if (i > begin) v++;
+            v += vi;
+        }
+    }
+
+    for (int i = begin; i <= end; i++) {
+        arr[i] = tmp[i];
+    }
+    lv = quickSort(arr, pi + 1, end);
+    rv = quickSort(arr, begin, pi - 1);
+    return lv + rv + v;
+
+}
+
+long quickSortInversion(int *arr, int size) {
+    tmp = malloc(sizeof(int) * size);
+    long result = quickSort(arr, 0, size - 1);
+    free(tmp);
+    return result;
+}
+
 /**
  * base algorithm count the number of inversions, validate result only
  * @param arr input, array of unsort number

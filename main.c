@@ -10,6 +10,7 @@
 #include "inversion-number.h"
 #include "kthLargest.h"
 #include "tree-local-min.h"
+#include "nth-smallest.h"
 
 #define DIM         512
 #define BUFFER_SIZE ((DIM)*(DIM))
@@ -21,7 +22,7 @@ int main() {
 //    int k;
 //    k = baseMulti(5e5, 5e5);
 //    printf("%d\n", k);
-//    k = karatsubaMulti(5e5, 5e5);
+//    k = karatsubaMulti(3, 4);
 //    printf("%d\n", k);
 
 //    int k;
@@ -50,30 +51,30 @@ int main() {
 
 
 
-    for (int i = 0; i < BUFFER_SIZE; i++) {
-        arr[i] = rand();
-    }
-    int time = clock();
-    int *b = baseMatrixMulti(arr, DIM, DIM, arr, DIM, DIM);
-    time = clock() - time;
-    printf("%d\n", time);
-
-    time = clock();
-    b = strassenMatrixMulti(arr, arr, DIM);
-    time = clock() - time;
-    printf("%d\n", time);
-
-
-
-//    FILE *file = fopen("D:\\\\Q8.txt", "r");
-//    int size = 0;
-//    while (EOF != fscanf(file, "%d", arr + size)) {
-//        size++;
-//    };
+//    for (int i = 0; i < BUFFER_SIZE; i++) {
+//        arr[i] = rand();
+//    }
+//    int time = clock();
+//    int *b = baseMatrixMulti(arr, DIM, DIM, arr, DIM, DIM);
+//    time = clock() - time;
+//    printf("%d\n", time);
 //
-//    long invNum = mergeSortInversion(arr, size);
-//
-//    printf("%ld", invNum);
+//    time = clock();
+//    b = strassenMatrixMulti(arr, arr, DIM);
+//    time = clock() - time;
+//    printf("%d\n", time);
+
+
+
+    FILE *file = fopen("D:\\\\Q8.txt", "r");
+    int size = 0;
+    while (EOF != fscanf(file, "%d", arr + size)) {
+        size++;
+    };
+
+    long invNum = quickSortInversion(arr, size);
+
+    printf("%ld", invNum);
 
 
 //    int arr[] = {3, 2, 5, 8, 6, 1};
@@ -125,6 +126,11 @@ int main() {
 //    Tree *tree = &n5;
 //
 //    printf("%d", findTreeLocalMin(tree));
+
+    int a[] = {1, 2, 7, 10, 11, 12};
+    int b[] = {0, 3, 5, 14, 15, 16};
+    int res = findMedian(a, b, 5);
+    //printf("%d", res);
 
     return 0;
 }

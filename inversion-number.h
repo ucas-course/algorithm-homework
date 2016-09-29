@@ -9,4 +9,6 @@ long mergeSortInversion(int *arr, int size);
 
 long baseInversion(int *arr, int size);
 
+long quickSortInversion(int *arr, int size);
+
 #endif //WORKSPACE_INVERSION_NUMBER_H

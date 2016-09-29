@@ -20,13 +20,30 @@
 Assume $A$ and $B$ are two databases, elements in $A$ and $B$ are sorted.
 
 We can get median val from each database, assume $a$ and $b$. 
-if $a>b$, find median in $A[1,\frac{n}{2}-1]$ and $B[\frac{n}{2},n]$, otherwise, find median in $A[\frac{n}{2},n]$ and $B[1,\frac{n}{2}-1]$
+If $a>b$, find median in $A[1,\frac{n}{2}]$ and $B[\frac{n}{2}+1,n]$, otherwise, find median in $A[\frac{n}{2}+1,n]$ and $B[1,\frac{n}{2}]$
+
+#### Pseudo Code
+
+```pseudo
+
+findMedianHelper(A[0...n-1],B[0...n-1)
+    if(A and B only have one element)
+        return MIN(A,B)
+    
+    query A and B median element index, assume a and b.
+    
+    if(A[a]>B[b])
+        return findMedianHelper(A[0...a],B[b+1...n-1])
+    else
+        return findMedianHelper(A[a+1...n-1],B[0...b])
+
+```
 
 ### Subproblem reduction graph
 
 ### Provement
 
-Firstly, we always make each database smaller than before(half), so after finite step we can finish.
+Firstly, we always make each database smaller than before(about half size), so after finite step we can finish.
 
 Secondly, we can always find $k^{th}$ element in each partition. So when the partition size turn to one, the smaller element is the result.
 
@@ -36,6 +53,102 @@ For function called each time, question reduce to half size, so $T(n)=T(\frac{n}
 
 ### Implementation
 
+nth-smallest.h
+
+```c
+//
+// Created by zl on 2016/9/29.
+//
+
+#ifndef WORKSPACE_NTH_SMALLEST_H
+#define WORKSPACE_NTH_SMALLEST_H
+
+int findMedian(int *a, int *b, int size);
+
+#endif //WORKSPACE_NTH_SMALLEST_H
+
+```
+
+
+nth-smallest.c
+
+```c
+//
+// Created by zl on 2016/9/29.
+//
+
+#include "nth-smallest.h"
+
+#define min(a, b) ((a)<(b)?(a):(b))
+#define max(a, b) ((a)>(b)?(a):(b))
+
+/**
+ *
+ * @param a A sorted array
+ * @param ab The begin element index of a
+ * @param ae The end element index of a
+ * @param b A sorted array
+ * @param bb The begin element index of b
+ * @param be The end element index of b
+ * @return The median element
+ */
+int findMedianHelper(int *a, int ab, int ae, int *b, int bb, int be) {
+    if (ab == ae && bb == be) {
+        return min(a[ab], b[bb]);
+    }
+
+    int am = (ab + ae) / 2;
+    int bm = (bb + be) / 2;
+
+    if (a[am] > b[bm]) {
+        return findMedianHelper(a, ab, am, b, bm + 1, be);
+    } else {
+        return findMedianHelper(a, am + 1, ae, b, bb, bm);
+    }
+}
+
+/**
+ *
+ * @param a A sorted array
+ * @param b A sorted array
+ * @param size Size of a and b
+ * @return The median element
+ */
+int findMedian(int *a, int *b, int size) {
+    return findMedianHelper(a, 0, size - 1, b, 0, size - 1);
+}
+
+```
+main.c
+
+```c
+//
+// Created by zl on 2016/9/24.
+//
+
+#include "stdio.h"
+#include "stdlib.h"
+#include "time.h"
+#include "multiplication.h"
+#include "matrix-multi.h"
+#include "inversion-number.h"
+#include "kthLargest.h"
+#include "tree-local-min.h"
+#include "nth-smallest.h"
+
+#define DIM         512
+#define BUFFER_SIZE ((DIM)*(DIM))
+int arr[BUFFER_SIZE];
+
+int main() {
+
+    int a[] = {1, 2, 7, 10, 11, 12};
+    int b[] = {0, 3, 5, 14, 15, 16};
+    int res = findMedian(a, b, 5);
+    printf("%d", res); //res is 7
+    return 0;
+}
+```
 ## Question 2
 
 > Find the $k^{th}$ largest element in an unsorted array. Note that it is the $k$th largest element in the sorted order, not the $k^{th}$ distinct element.
@@ -53,6 +166,23 @@ In this question we can transform it to a equivalent question: find $s$th smalle
 We can get pivot's position(index) easily. if position(index) smaller then $s$, we can find $(s-index-1)^{th}$ smallest in left part.
 if position(index) smaller then $s$, find $s^{th}$ smallest in right part.
 if position(index) equal $s$, return current element.
+
+#### Pseudo Code
+
+```Pseudo
+kthLargest(A[0...n-1],kth)
+    return kthMin(A,n-kth)
+    
+kthMin(A[b...e],kth)
+    if(b == e)
+        return A[b]
+    p = arr[b];
+    make A[b...e] that A[b...i]<A[i]=p<A[i+1..e]
+    if(i-b<kth)
+        return kthMin(A[i+1...end], kth - (i - b + 1))
+    if(i-b>kth)
+        return kthMin(A[b..i-1],kth)
+```
 
 ### Subproblem reduction graph
 
@@ -189,6 +319,16 @@ Think about a tree, if its root smaller than tow children, itself is local minim
   
 If root has one or more children smaller then it, we can think the child as a tree, which must have local minimum.
   
+#### Pseudo Code
+
+```pseudo
+findTreeLocalMin(node)
+    if(node don't have child OR its all children value bigger than node.val)
+        return node.val
+    assume node's child i.val > node.val
+    return findTreeLocalMin(i)
+         
+```
 
 ### Subproblem reduction graph
 
@@ -252,6 +392,8 @@ int findTreeLocalMin(Tree *tree) {
 }
 
 ```
+
+main.c
 
 ```c
 //
@@ -473,10 +615,87 @@ int main() {
 
 ### Is it possible to use the Quick-Sort idea instead?
 
-The question is **No**, merge-sort use bottom-up idea divide array, but quick use top-down idea.
+The question is **No**, merge-sort is stable, but quick-sort is not stable.
 
-For merge-sort idea, both its left and right side is sorted anytime, each element can't jump to unsort part, so we can count the number of inversions.
-But in quick-sort idea, element can jump to unsort part,maybe jump over larger element. 
+But, if we change quick-sort to stable form, it can count the number of inversion.
+
+Following is implementation
+  
+```c
+//
+// Created by zl on 2016/9/24.
+//
+
+#include "stdio.h"
+#include "stdlib.h"
+#include "time.h"
+#include "multiplication.h"
+#include "matrix-multi.h"
+#include "inversion-number.h"
+#include "kthLargest.h"
+#include "tree-local-min.h"
+#include "nth-smallest.h"
+
+int *tmp = NULL;
+
+long quickSort(int *arr, int begin, int end) {
+    if (begin >= end) {
+        return 0;
+    }
+    long v = 0, lv, rv, vi = 0;
+    int pi = begin;
+
+    int p = arr[begin];
+    for (int i = begin; i <= end; i++) {
+        if (arr[i] < p) pi++;
+    }
+
+    tmp[pi] = p;
+
+    int ir = pi + 1, il = begin;
+
+    for (int i = begin + 1; i <= end; i++) {
+        if (arr[i] > p) {
+            tmp[ir++] = arr[i];
+            vi++;
+            if (i < begin) v++;
+        } else if (arr[i] < p) {
+            tmp[il++] = arr[i];
+            if (i > begin) v++;
+            v += vi;
+        }
+    }
+
+    for (int i = begin; i <= end; i++) {
+        arr[i] = tmp[i];
+    }
+    lv = quickSort(arr, pi + 1, end);
+    rv = quickSort(arr, begin, pi - 1);
+    return lv + rv + v;
+
+}
+
+long quickSortInversion(int *arr, int size) {
+    tmp = malloc(sizeof(int) * size);
+    long result = quickSort(arr, 0, size - 1);
+    free(tmp);
+    return result;
+}
+
+    FILE *file = fopen("D:\\\\Q8.txt", "r");
+    int size = 0;
+    while (EOF != fscanf(file, "%d", arr + size)) {
+        size++;
+    };
+
+    long invNum = quickSortInversion(arr, size);
+
+    printf("%ld", invNum);
+    
+    return 0;
+    
+}
+```
 
 ## Question 10
 
@@ -1004,4 +1223,4 @@ Running this program a lot of times, we get avg time
 | time(ms)      |       15      |        47        |
 
 We can find Karatsuba worth than base idea. The reason is that Karatsuba use recursion, and Base idea only use loop.
-In small(in this case, `int` was used, the largest number is 2147483647) size Multi, base idea is better  
+In small(in this case, `int` was used, the largest number's bit is 32) size Multi, base idea is better  
